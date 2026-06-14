@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AdminRole;
+use App\Enums\AuthGuard;
+use App\Enums\PermissionAction;
+use App\Enums\PermissionGroup;
 use App\Models\Admin;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -12,23 +16,15 @@ use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
-    private const GUARD = 'admins';
-    private const ROLES = ['super-admin', 'editor'];
-    private const PERMISSION_GROUPS = [
-        'products' => ['create', 'edit', 'delete', 'view'],
-        'categories' => ['create', 'edit', 'delete', 'view'],
-        'orders' => ['create', 'edit', 'delete', 'view'],
-        'admins' => ['create', 'edit', 'delete', 'view'],
-    ];
     public function run(): void{
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         $permissionNames = $this->permissionNames();
         $this->deleteStaleDefaults($permissionNames);
         $this->deleteOrphanPermissionRows();
-        foreach (self::ROLES as $roleName) {
+        foreach (AdminRole::values() as $roleName) {
             $this->createRole($roleName);
         }
-        $superAdminRole = $this->createRole('super-admin');
+        $superAdminRole = $this->createRole(AdminRole::SuperAdmin->value);
         $allPermissions = $this->createPermissions($permissionNames);
         $superAdminRole->givePermissionTo($allPermissions);
         $this->createSuperAdmin($superAdminRole);
@@ -37,7 +33,7 @@ class RolesAndPermissionsSeeder extends Seeder
     private function createRole(string $name): Role{
         return Role::firstOrCreate([
             'name'       => $name,
-            'guard_name' => self::GUARD,
+            'guard_name' => AuthGuard::Admins->value,
         ]);
     }
     private function buildPermissionName(string $group, string $action): string{
@@ -45,32 +41,46 @@ class RolesAndPermissionsSeeder extends Seeder
     }
     private function permissionNames(): array{
         $permissionNames = [];
-        foreach (self::PERMISSION_GROUPS as $group => $actions) {
+        foreach ($this->permissionGroups() as $group => $actions) {
             foreach ($actions as $action) {
                 $permissionNames[] = $this->buildPermissionName($group, $action);
             }
         }
         return $permissionNames;
     }
+
+    private function permissionGroups(): array
+    {
+        return [
+            PermissionGroup::Products->value => PermissionAction::values(),
+            PermissionGroup::Categories->value => PermissionAction::values(),
+            PermissionGroup::Orders->value => PermissionAction::values(),
+            PermissionGroup::Admins->value => PermissionAction::values(),
+        ];
+    }
     private function createPermissions(array $permissionNames): array
     {
         foreach ($permissionNames as $permissionName) {
             Permission::firstOrCreate([
                 'name' => $permissionName,
-                'guard_name' => self::GUARD,
+                'guard_name' => AuthGuard::Admins->value,
             ]);
         }
         return $permissionNames;
     }
     private function deleteStaleDefaults(array $permissionNames): void{
-        Role::where('guard_name', 'admin')
-            ->whereIn('name', ['super-admin', 'admin', 'editor'])
+        Role::where('guard_name', AuthGuard::LegacyAdmin->value)
+            ->whereIn('name', [
+                AdminRole::SuperAdmin->value,
+                AuthGuard::LegacyAdmin->value,
+                AdminRole::Editor->value,
+            ])
             ->delete();
-        Permission::where('guard_name', 'admin')->delete();
-        Role::where('guard_name', self::GUARD)
-            ->whereNotIn('name', self::ROLES)
+        Permission::where('guard_name', AuthGuard::LegacyAdmin->value)->delete();
+        Role::where('guard_name', AuthGuard::Admins->value)
+            ->whereNotIn('name', AdminRole::values())
             ->delete();
-        Permission::where('guard_name', self::GUARD)
+        Permission::where('guard_name', AuthGuard::Admins->value)
             ->whereNotIn('name', $permissionNames)
             ->delete();
     }

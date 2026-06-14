@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ItemStatus;
 use App\Models\Relations\ItemRelationsTrait;
 use App\Models\Traits\HasMediaTrait;
 use App\Models\Traits\HasTranslationsTrait;
@@ -9,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
 {
-    // FIX #13: أضفنا ItemRelationsTrait اللي كان مش بيتستخدم
     use HasTranslationsTrait,
         HasMediaTrait,
         ItemRelationsTrait;
@@ -24,5 +24,13 @@ class Item extends Model
         'status',
         'stock',
         'sku',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'is_discount' => 'boolean',
+        'price' => 'decimal:2',
+        'discount_price' => 'decimal:2',
+        'status' => ItemStatus::class,
     ];
 }

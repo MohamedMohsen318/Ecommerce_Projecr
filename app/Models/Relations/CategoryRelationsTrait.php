@@ -10,24 +10,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait CategoryRelationsTrait
 {
-    public function parent(): BelongsTo
-    {
+    public function parent(): BelongsTo{
         return $this->belongsTo(
             related: Category::class,
             foreignKey: 'parent_id'
         );
     }
-
-    public function children(): HasMany
-    {
+    public function children(): HasMany{
         return $this->hasMany(
             related: Category::class,
             foreignKey: 'parent_id'
         );
     }
-
-    public function allChildren(): HasMany
-    {
+    public function allChildren(): HasMany{
         return $this->children()
             ->with([
                 'allChildren' => function ($query) {
@@ -35,13 +30,10 @@ trait CategoryRelationsTrait
                 }
             ])->withCount(relations: 'items');
     }
-
-    public function items(): BelongsToMany
-    {
+    public function items(): BelongsToMany{
         return $this->belongsToMany(
             related: Item::class,
             table: 'category_item'
         );
     }
-
 }

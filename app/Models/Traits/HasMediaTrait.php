@@ -2,49 +2,41 @@
 
 namespace App\Models\Traits;
 
+use App\Enums\MediaType;
 use App\Models\Media;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait HasMediaTrait
 {
-    public function media(): MorphMany
-    {
+    public function media(): MorphMany{
         return $this->morphMany(
             related: Media::class,
             name: 'model'
         );
     }
-
-    public function getMedia(): Collection
-    {
+    public function getMedia(): Collection{
         if ($this->relationLoaded(key: 'media')) {
             return $this->media;
         }
         return $this->media()->get();
     }
-
-    public function getFirstImage(): string
-    {
+    public function getFirstImage(): string{
         if ($this->relationLoaded(key: 'media')) {
             return $this->media->firstWhere(
                 key: 'type',
-                operator: 'image'
+                operator: MediaType::Image
             )?->file;
         }
         return $this->media()
-            ->where('type', 'image')
+            ->where('type', MediaType::Image->value)
             ->first()?->file;
     }
-
-    public function setMedia($image, $type, $path): void
-    {
+    public function setMedia($image, MediaType|string $type, $path): void{
         $this->media()->updateOrCreate([
-            'type' => $type,
+            'type' => $type instanceof MediaType ? $type->value : $type,
         ], [
             'file' => $image->store($path, 'public'),
         ]);
     }
-
-
 }

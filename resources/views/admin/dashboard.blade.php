@@ -59,7 +59,7 @@
             </div>
             <div class="actions">
                 <a class="button secondary" href="{{ route('admins.categories.index') }}">Categories</a>
-                @if (auth('admins')->user()?->hasRole('super-admin'))
+                @if (auth(\App\Enums\AuthGuard::Admins->value)->user()?->hasRole(\App\Enums\AdminRole::SuperAdmin->value))
                     <a class="button" href="{{ route('admins.admins.create') }}">Create Admin</a>
                     <a class="button secondary" href="{{ route('admins.admins.index') }}">Manage Admins</a>
                     <a class="button" href="{{ route('admins.permissions.index') }}">Admin permissions</a>

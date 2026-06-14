@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests\Admin\Category;
 
+use App\Enums\AuthGuard;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth('admins')->check();
+        return auth(AuthGuard::Admins->value)->check();
     }
 
     public function rules(): array

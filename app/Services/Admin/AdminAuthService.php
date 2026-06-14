@@ -2,30 +2,26 @@
 
 namespace App\Services\Admin;
 
+use App\Enums\AuthGuard;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 
 class AdminAuthService
 {
-    public function login(array $credentials, bool $remember = false): bool
-    {
-        return Auth::guard('admins')->attempt([
+    public function login(array $credentials, bool $remember = false): bool{
+        return Auth::guard(AuthGuard::Admins->value)->attempt([
             'email' => $credentials['email'],
             'password' => $credentials['password'],
         ], $remember);
     }
-
-    public function register(array $data): Admin
-    {
+    public function register(array $data): Admin{
         return Admin::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
     }
-
-    public function logout(): void
-    {
-        Auth::guard('admins')->logout();
+    public function logout(): void{
+        Auth::guard(AuthGuard::Admins->value)->logout();
     }
 }

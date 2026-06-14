@@ -35,10 +35,10 @@
         <a href="{{ route('home') }}">{{ config('app.name', 'Laravel Store') }}</a>
         <div class="nav-links">
             <a href="{{ route('categories.index') }}">Categories</a>
-            @if (auth('admins')->check())
+            @if (auth(\App\Enums\AuthGuard::Admins->value)->check())
                 <a href="{{ route('admins.dashboard') }}">Dashboard</a>
                 <a href="{{ route('admins.categories.index') }}">Admin Categories</a>
-                @if (auth('admins')->user()?->hasRole('super-admin'))
+                @if (auth(\App\Enums\AuthGuard::Admins->value)->user()?->hasRole(\App\Enums\AdminRole::SuperAdmin->value))
                     <a class="nav-link-featured" href="{{ route('admins.admins.create') }}">Create Admin</a>
                     <a href="{{ route('admins.admins.index') }}">Admins</a>
                     <a href="{{ route('admins.permissions.index') }}">Permissions</a>

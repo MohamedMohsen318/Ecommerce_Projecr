@@ -2,6 +2,8 @@
 
 namespace App\Services\Admin;
 
+use App\Enums\AdminRole;
+use App\Enums\AuthGuard;
 use App\Models\Admin;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -9,15 +11,13 @@ use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-// FIX #5: إنشاء الـ PermissionService اللي كان مش موجود
 class PermissionService
 {
-    // FIX #14: الـ roles والـ permissions بتتعمل بالـ guard الصح
-    private string $guard = 'admins';
+    private string $guard = AuthGuard::Admins->value;
 
     public function authorizeSuperAdmin(): void
     {
-        if (! auth('admins')->user()?->hasRole('super-admin')) {
+        if (! auth(AuthGuard::Admins->value)->user()?->hasRole(AdminRole::SuperAdmin->value)) {
             throw new AuthorizationException('Access denied.');
         }
     }

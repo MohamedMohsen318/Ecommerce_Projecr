@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MediaType;
 use Illuminate\Database\Eloquent\Model;
 
 class Media extends Model
@@ -11,5 +12,9 @@ class Media extends Model
         'model_type',
         'type',
         'file',
+    ];
+
+    protected $casts = [
+        'type' => MediaType::class,
     ];
 }

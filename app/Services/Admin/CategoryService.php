@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 
+use App\Enums\MediaType;
 use App\Models\Category;
 use Illuminate\Support\Str;
 
@@ -44,7 +45,7 @@ class CategoryService
         $this->syncTranslations($category, $data['translations']);
 
         if (isset($data['image'])) {
-            $category->setMedia($data['image'], 'image', 'categories');
+            $category->setMedia($data['image'], MediaType::Image, 'categories');
         }
 
         return $category;
@@ -65,7 +66,7 @@ class CategoryService
         $this->syncTranslations($category, $data['translations']);
 
         if (isset($data['image'])) {
-            $category->setMedia($data['image'], 'image', 'categories');
+            $category->setMedia($data['image'], MediaType::Image, 'categories');
         }
 
         return $category->fresh();
