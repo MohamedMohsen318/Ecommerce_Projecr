@@ -9,8 +9,7 @@ use Illuminate\Support\Collection;
 
 class DashboardService
 {
-    public function getStats(): array
-    {
+    public function getStats(): array{
         return [
             'revenue'    => 0,
             'orders'     => 0,
@@ -19,15 +18,10 @@ class DashboardService
             'categories' => Category::count(),
         ];
     }
-
-    public function getRecentOrders(): Collection
-    {
-        // هيتحدث لما تضيف orders table
+    public function getRecentOrders(): Collection{
         return collect([]);
     }
-
-    public function getTopCategories(): Collection
-    {
+    public function getTopCategories(): Collection{
         return Category::with('translations')
             ->withCount('items')
             ->whereNull('parent_id')

@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Str;
-// FIX #12: شيلنا "use Pdo\Mysql" لأنها PHP 8.5+ فقط وبتكسر على الـ versions الأقدم
-// Laravel بيتعامل مع ده internally
 
 return [
 

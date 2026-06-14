@@ -27,7 +27,6 @@ class CategoryController extends Controller
         return view('admin.categories.create', compact('selectCategories'));
     }
 
-    // FIX #3: الـ Controller دلوقتي هو اللي بيعمل الـ redirect مش الـ Service
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
         $this->categoryService->store($request->validated());

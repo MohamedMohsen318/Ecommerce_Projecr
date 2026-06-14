@@ -33,7 +33,6 @@ class CategoryService
             ->get();
     }
 
-    // FIX #3: الـ Service دلوقتي بترجع Category مش RedirectResponse
     public function store(array $data): Category
     {
         $category = Category::create([
@@ -51,7 +50,6 @@ class CategoryService
         return $category;
     }
 
-    // FIX #3: بترجع Category مش RedirectResponse
     public function update(array $data, Category $category): Category
     {
         $category->update([
@@ -72,14 +70,11 @@ class CategoryService
         return $category->fresh();
     }
 
-    // FIX #3: بترجع void مش RedirectResponse
     public function destroy(Category $category): void
     {
         $category->delete();
     }
 
-    // FIX #4: كانت بتبعت $translations كله بدل ما تبعت $data['translations']
-    // والصح إنها تبعت $translations اللي هو parameter الـ method
     private function syncTranslations(Category $category, array $translations): void
     {
         foreach ($translations as $locale => $content) {

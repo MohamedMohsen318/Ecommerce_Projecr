@@ -30,7 +30,6 @@
                             <td>
                                 <div class="actions">
                                     <a class="button secondary" href="{{ route('admins.categories.edit', $category) }}">Edit</a>
-                                    {{-- FIX #10: إضافة confirmation قبل الحذف --}}
                                     <form method="POST" action="{{ route('admins.categories.destroy', $category) }}"
                                           onsubmit="return confirm('Are you sure you want to delete this category?')">
                                         @csrf
