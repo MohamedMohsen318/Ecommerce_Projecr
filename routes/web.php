@@ -7,11 +7,9 @@ use App\Http\Controllers\Admin\PermissionController as AdminPermissionController
 use App\Http\Controllers\Admin\AdminController as AdminAdminController;
 use App\Http\Controllers\Admin\ItemController as AdminItemController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
-
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\ItemController as UserItemController;
-
 use Illuminate\Support\Facades\Route;
 
 // Home

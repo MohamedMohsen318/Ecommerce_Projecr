@@ -24,6 +24,8 @@ trait CategoryRelationsTrait
     }
     public function allChildren(): HasMany{
         return $this->children()
+            ->with('translations')
+            ->orderBy('sort_order')
             ->with([
                 'allChildren' => function ($query) {
                     $query->withCount('items');

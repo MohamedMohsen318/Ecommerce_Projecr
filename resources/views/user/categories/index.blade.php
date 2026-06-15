@@ -14,12 +14,24 @@
 
         <div class="grid">
             @forelse ($categories as $category)
-                <article class="card stack">
-                    <div>
-                        <h2>{{ $category->translate('en')?->name ?? $category->slug }}</h2>
-                        <p class="muted">{{ $category->translate('en')?->description }}</p>
+                <article class="card catalog-card">
+                    @if ($category->getFirstImageUrl())
+                        <a class="media-link" href="{{ $category->getFirstImageUrl() }}" target="_blank" rel="noopener">
+                            <img class="card-media" src="{{ $category->getFirstImageUrl() }}" alt="{{ $category->translate('en')?->name ?? $category->slug }}">
+                        </a>
+                    @else
+                        <div class="image-placeholder">No Image</div>
+                    @endif
+                    <div class="catalog-body">
+                        <div>
+                            <h2 class="catalog-title">{{ $category->translate('en')?->name ?? $category->slug }}</h2>
+                            <p class="muted catalog-description">{{ \Illuminate\Support\Str::limit($category->translate('en')?->description, 95) }}</p>
+                        </div>
+                        <div class="catalog-footer">
+                            <span class="pill">{{ $category->children->count() }} subcategories</span>
+                            <a class="button secondary" href="{{ route('categories.show', $category->fullPath()) }}">View</a>
+                        </div>
                     </div>
-                    <a class="button secondary" href="{{ route('categories.show', $category->slug) }}">View Category</a>
                 </article>
             @empty
                 <p class="muted">No categories are available right now.</p>

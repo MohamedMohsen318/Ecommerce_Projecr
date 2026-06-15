@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Services\User\CategoryService;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryController extends Controller
 {
@@ -21,7 +20,8 @@ class CategoryController extends Controller
 
     public function show(string $path){
         $category = $this->categoryService->findByPath($path);
-        $products = new LengthAwarePaginator([], 0, 12);
-        return view('user.categories.show', compact('category', 'products'));
+        $children = $category->children;
+        $products = $this->categoryService->getCategoryProducts($category);
+        return view('user.categories.show', compact('category', 'children', 'products'));
     }
 }

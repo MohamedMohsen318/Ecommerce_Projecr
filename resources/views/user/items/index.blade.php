@@ -14,14 +14,34 @@
 
         <div class="grid">
             @forelse ($items as $item)
-                <article class="card stack">
-                    <div>
-                        <h2>{{ $item->name }}</h2>
-                        <p class="muted">{{ \Illuminate\Support\Str::limit($item->description, 100) }}</p>
+                <article class="card catalog-card">
+                    @if ($item->getFirstImageUrl())
+                        <a class="media-link" href="{{ $item->getFirstImageUrl() }}" target="_blank" rel="noopener">
+                            <img class="card-media" src="{{ $item->getFirstImageUrl() }}" alt="{{ $item->name }}">
+                        </a>
+                    @else
+                        <div class="image-placeholder">No Image</div>
+                    @endif
+                    <div class="catalog-body">
+                        <div>
+                            <h2 class="catalog-title">{{ $item->name }}</h2>
+                            <p class="muted catalog-description">{{ \Illuminate\Support\Str::limit($item->description, 100) }}</p>
+                        </div>
+                        @if ($item->categories->isNotEmpty())
+                            <div class="pill-list">
+                                @foreach ($item->categories->take(2) as $category)
+                                    <span class="pill">{{ $category->translate('en')?->name ?? $category->slug }}</span>
+                                @endforeach
+                            </div>
+                        @endif
+                        <div class="catalog-footer">
+                            <div>
+                                <div class="price">{{ $item->price }} EGP</div>
+                                <div class="stock">{{ $item->stock }} in stock</div>
+                            </div>
+                            <a class="button" href="{{ route('products.show', $item) }}">View</a>
+                        </div>
                     </div>
-                    <p><strong>Price:</strong> {{ $item->price }} EGP</p>
-                    <p><strong>Stock:</strong> {{ $item->stock }}</p>
-                    <a class="button" href="{{ route('products.show', $item) }}">View Product</a>
                 </article>
             @empty
                 <p class="muted">No products are available right now.</p>

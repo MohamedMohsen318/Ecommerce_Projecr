@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\ItemStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
+use App\Services\Admin\CategoryService;
 use App\Services\Admin\ItemService;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
     public function __construct(
-        protected ItemService $itemService
+        protected ItemService $itemService,
+        protected CategoryService $categoryService
     ) {}
 
     public function index()
@@ -24,8 +26,9 @@ class ItemController extends Controller
     public function create()
     {
         $statuses = ItemStatus::cases();
+        $selectCategories = $this->categoryService->getCategoriesForSelect();
 
-        return view('admin.items.create', compact('statuses'));
+        return view('admin.items.create', compact('statuses', 'selectCategories'));
     }
 
     public function store(Request $request)
@@ -36,6 +39,9 @@ class ItemController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
             'status' => ['required', 'in:' . implode(',', ItemStatus::values())],
+            'category_ids' => ['required', 'array', 'min:1'],
+            'category_ids.*' => ['exists:categories,id'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ]);
 
         $this->itemService->create($data);
@@ -48,8 +54,10 @@ class ItemController extends Controller
     public function edit(Item $item)
     {
         $statuses = ItemStatus::cases();
+        $selectCategories = $this->categoryService->getCategoriesForSelect();
+        $item->load(['categories', 'media']);
 
-        return view('admin.items.edit', compact('item', 'statuses'));
+        return view('admin.items.edit', compact('item', 'statuses', 'selectCategories'));
     }
 
     public function update(Request $request, Item $item)
@@ -60,7 +68,13 @@ class ItemController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
             'status' => ['required', 'in:' . implode(',', ItemStatus::values())],
+            'is_active' => ['nullable'],
+            'category_ids' => ['required', 'array', 'min:1'],
+            'category_ids.*' => ['exists:categories,id'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        $data['is_active'] = $request->boolean('is_active');
 
         $this->itemService->update($item, $data);
 

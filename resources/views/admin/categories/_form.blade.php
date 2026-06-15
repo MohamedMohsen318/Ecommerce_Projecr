@@ -4,11 +4,12 @@
     <span>Parent category</span>
     <select class="select" name="parent_id">
         <option value="">No parent</option>
-        @foreach ($selectCategories as $selectCategory)
-            <option value="{{ $selectCategory->id }}" @selected(old('parent_id', $category->parent_id ?? null) == $selectCategory->id)>
-                {{ $selectCategory->translate('en')?->name ?? $selectCategory->slug }}
-            </option>
-        @endforeach
+        @include('admin.categories._category_options', [
+            'categories' => $selectCategories,
+            'ignoredCategoryId' => $category?->id,
+            'selectedCategoryIds' => [(int) old('parent_id', $category->parent_id ?? 0)],
+            'level' => 0,
+        ])
     </select>
 </label>
 

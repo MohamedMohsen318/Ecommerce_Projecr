@@ -15,26 +15,14 @@
                     <tr><th>Name</th><th>Slug</th><th>Products</th><th>Status</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
-                    @forelse ($categories as $category)
-                        <tr>
-                            <td>{{ $category->translate('en')?->name ?? $category->slug }}</td>
-                            <td>{{ $category->slug }}</td>
-                            <td>{{ $category->items_count ?? 0 }}</td>
-                            <td>{{ $category->is_active ? 'Active' : 'Inactive' }}</td>
-                            <td>
-                                <div class="actions">
-                                    <a class="button secondary" href="{{ route('admins.categories.edit', $category) }}">Edit</a>
-                                    <form method="POST" action="{{ route('admins.categories.destroy', $category) }}" onsubmit="return confirm('Delete this category?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="button danger" type="submit">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
+                    @if ($categories->isNotEmpty())
+                        @include('admin.categories._category_rows', [
+                            'categories' => $categories,
+                            'level' => 0,
+                        ])
+                    @else
                         <tr><td colspan="5" class="muted">No categories yet.</td></tr>
-                    @endforelse
+                    @endif
                 </tbody>
             </table>
         </div>

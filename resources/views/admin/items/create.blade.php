@@ -10,7 +10,7 @@
         </div>
 
         <div class="card">
-            <form class="form" method="POST" action="{{ route('admins.items.store') }}">
+            <form class="form" method="POST" action="{{ route('admins.items.store') }}" enctype="multipart/form-data">
                 @csrf
                 <label class="field">
                     <span>Product name</span>
@@ -37,6 +37,20 @@
                             </option>
                         @endforeach
                     </select>
+                </label>
+                <label class="field">
+                    <span>Categories</span>
+                    <select name="category_ids[]" multiple required>
+                        @include('admin.categories._category_options', [
+                            'categories' => $selectCategories,
+                            'selectedCategoryIds' => array_map('intval', old('category_ids', [])),
+                            'level' => 0,
+                        ])
+                    </select>
+                </label>
+                <label class="field">
+                    <span>Image</span>
+                    <input class="input" type="file" name="image" accept="image/*">
                 </label>
                 <button class="button" type="submit">Save Product</button>
             </form>

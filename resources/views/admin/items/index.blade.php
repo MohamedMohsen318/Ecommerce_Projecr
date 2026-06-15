@@ -12,12 +12,15 @@
         <div class="card">
             <table class="table">
                 <thead>
-                    <tr><th>Product</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
+                    <tr><th>Product</th><th>Categories</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                     @forelse ($items as $item)
                         <tr>
                             <td>{{ $item->name }}</td>
+                            <td>
+                                {{ $item->categories->map(fn ($category) => $category->translate('en')?->name ?? $category->slug)->join(', ') ?: 'No category' }}
+                            </td>
                             <td>{{ $item->price }} EGP</td>
                             <td>{{ $item->stock }}</td>
                             <td>{{ $item->status->label() }}</td>
@@ -33,7 +36,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="muted">No products yet.</td></tr>
+                        <tr><td colspan="6" class="muted">No products yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>

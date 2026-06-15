@@ -23,13 +23,24 @@ class CategoryService
 
     public function getCategoriesForSelect()
     {
-        return Category::with('translations')->get();
+        return Category::with([
+            'translations',
+            'allChildren.translations',
+        ])
+            ->whereNull('parent_id')
+            ->orderBy('sort_order')
+            ->get();
     }
 
     public function getCategoriesForEdit(Category $category)
     {
-        return Category::with('translations')
+        return Category::with([
+            'translations',
+            'allChildren.translations',
+        ])
             ->where('id', '!=', $category->id)
+            ->whereNull('parent_id')
+            ->orderBy('sort_order')
             ->get();
     }
 

@@ -11,6 +11,7 @@ class ItemController extends Controller
     public function index(): View
     {
         $items = Item::query()
+            ->with(['media', 'categories.translations'])
             ->where('is_active', true)
             ->latest()
             ->paginate(12);
@@ -21,6 +22,7 @@ class ItemController extends Controller
     public function show(Item $item): View
     {
         abort_unless($item->is_active, 404);
+        $item->load(['media', 'categories.translations']);
 
         return view('user.items.show', compact('item'));
     }

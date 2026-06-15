@@ -21,7 +21,7 @@ trait HasMediaTrait
         }
         return $this->media()->get();
     }
-    public function getFirstImage(): string{
+    public function getFirstImage(): ?string{
         if ($this->relationLoaded(key: 'media')) {
             return $this->media->firstWhere(
                 key: 'type',
@@ -31,6 +31,11 @@ trait HasMediaTrait
         return $this->media()
             ->where('type', MediaType::Image->value)
             ->first()?->file;
+    }
+    public function getFirstImageUrl(): ?string{
+        $image = $this->getFirstImage();
+
+        return $image ? url('storage/' . ltrim($image, '/')) : null;
     }
     public function setMedia($image, MediaType|string $type, $path): void{
         $this->media()->updateOrCreate([

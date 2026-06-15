@@ -10,7 +10,7 @@
         </div>
 
         <div class="card">
-            <form class="form" method="POST" action="{{ route('admins.items.update', $item) }}">
+            <form class="form" method="POST" action="{{ route('admins.items.update', $item) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <label class="field">
@@ -38,6 +38,25 @@
                             </option>
                         @endforeach
                     </select>
+                </label>
+                <label class="field">
+                    <span>Categories</span>
+                    <select name="category_ids[]" multiple required>
+                        @include('admin.categories._category_options', [
+                            'categories' => $selectCategories,
+                            'selectedCategoryIds' => array_map('intval', old('category_ids', $item->categories->pluck('id')->all())),
+                            'level' => 0,
+                        ])
+                    </select>
+                </label>
+                @if ($item->getFirstImageUrl())
+                    <a href="{{ $item->getFirstImageUrl() }}" target="_blank" rel="noopener">
+                        <img class="card-media" src="{{ $item->getFirstImageUrl() }}" alt="{{ $item->name }}">
+                    </a>
+                @endif
+                <label class="field">
+                    <span>Image</span>
+                    <input class="input" type="file" name="image" accept="image/*">
                 </label>
                 <label class="checkbox">
                     <input type="checkbox" name="is_active" {{ $item->is_active ? 'checked' : '' }}>
