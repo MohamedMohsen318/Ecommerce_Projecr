@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\LanguageController as LanguageController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
@@ -10,11 +11,18 @@ use App\Http\Controllers\User\OrderController as UserOrderController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\ItemController as UserItemController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use Illuminate\Support\Facades\Route;
 
 // Home
 Route::get('/', fn () => view('welcome'))
     ->name('home');
+
+//Language
+
+Route::get('/lang/{lang}', [LanguageController::class, 'switch'])
+    ->name('lang.switch');
+
 
 
 // AUTH (USER)
@@ -53,7 +61,6 @@ Route::get('/categories/{path}', [CategoryController::class, 'show'])
     ->where('path', '.*')
     ->name('categories.show');
 
-
 // Products (user)
 Route::get('/products', [UserItemController::class, 'index'])
     ->name('products.index');
@@ -61,9 +68,18 @@ Route::get('/products', [UserItemController::class, 'index'])
 Route::get('/products/{item}', [UserItemController::class, 'show'])
     ->name('products.show');
 
+
+// Orders (user)
 Route::middleware('auth')->group(function () {
+
     Route::post('/orders', [UserOrderController::class, 'store'])
         ->name('orders.store');
+
+    Route::get('/orders', [UserOrderController::class, 'index'])
+        ->name('orders.index');
+
+    Route::get('/orders/{order}', [UserOrderController::class, 'show'])
+        ->name('orders.show');
 });
 
 
@@ -71,6 +87,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')
     ->name('admins.')
+
     ->group(function () {
 
         // Guest Admin
@@ -133,6 +150,20 @@ Route::prefix('admin')
 
                     Route::delete('/{item}', [AdminItemController::class, 'destroy'])
                         ->name('destroy');
+                });
+
+            // orders ITEMS
+
+
+            Route::prefix('orders')
+                ->name('orders.')
+                ->group(function () {
+
+                    Route::get('/', [AdminOrderController::class, 'index'])
+                        ->name('index');
+
+                    Route::get('/{order}', [AdminOrderController::class, 'show'])
+                        ->name('show');
                 });
 
             // PERMISSIONS
