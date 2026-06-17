@@ -17,10 +17,25 @@ use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\ItemController as UserItemController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+
+
 
 // Home
 Route::get('/', fn () => view('welcome'))
     ->name('home');
+
+
+//lang
+
+Route::get('/lang/{locale}', function ($locale) {
+
+    if (in_array($locale, ['ar', 'en'])) {
+        Session::put('locale', $locale);
+    }
+
+    return redirect()->back();
+});
 
 
 // AUTH (USER)

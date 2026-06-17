@@ -3,7 +3,7 @@
 @section('title', 'Cart')
 
 @section('content')
-    <section class="stack" dir="rtl">
+    <section class="stack">
 
         <div class="page-head">
             <div>

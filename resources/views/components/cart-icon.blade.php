@@ -1,4 +1,5 @@
 @php
+    $isArabic = app()->getLocale() === 'ar';
     $count = 0;
 
     if (! \Illuminate\Support\Facades\Schema::hasTable('carts')) {
@@ -17,7 +18,7 @@
 
 <a href="{{ route('cart.index') }}"
    style="position:relative; display:inline-flex; align-items:center; gap:6px; font-weight:700; color:var(--ink)">
-    Cart
+    {{ $isArabic ? 'السلة' : 'Cart' }}
 
     @if($count > 0)
         <span style="
