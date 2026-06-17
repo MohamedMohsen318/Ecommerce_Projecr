@@ -1,25 +1,17 @@
 <?php
-
 namespace App\Models;
 
-use App\Models\Relations\CartItemRelationsTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class CartItem extends Model
+class CartItem
 {
-    use HasFactory, CartItemRelationsTrait;
+    public function __construct(
+        public int $product_id,
+        public string $name,
+        public float $price,
+        public int $quantity
+    ) {}
 
-    protected $fillable = [
-        'cart_id',
-        'item_id',
-        'quantity',
-        'price',
-        'options',
-    ];
-
-    protected $casts = [
-        'price'   => 'decimal:2',
-        'options' => 'array',
-    ];
+    public function subtotal(): float
+    {
+        return $this->price * $this->quantity;
+    }
 }
