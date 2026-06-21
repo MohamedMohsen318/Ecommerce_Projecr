@@ -25,16 +25,13 @@ class CategoryService
             ];
 
             if ($category->allChildren->isNotEmpty()) {
-                $tree = array_merge(
-                    $tree,
-                    $this->buildTree($category->allChildren, $level + 1)
-                );
+                foreach ($this->buildTree($category->allChildren, $level + 1) as $child) {
+                    $tree[] = $child;
+                }
             }
         }
-
         return $tree;
     }
-
     public function getCategoriesForIndex(): array
     {
         $categories = Category::with(['allChildren', 'translations'])

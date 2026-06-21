@@ -48,7 +48,7 @@ class Cart extends Model
             ? $this->items
             : $this->items()->get();
 
-        return (float) $items->sum(fn (CartItem $item) => $item->total);
+        return (float) $items->sum('total');
     }
 
     public function getTotalAttribute(): float

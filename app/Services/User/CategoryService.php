@@ -18,18 +18,20 @@ class CategoryService
             ->get();
     }
     public function findByPath(string $path): Category{
-        $slugs = explode('/', $path);
-        $slug = end($slugs);
-        $category = Category::where('slug', $slug)
-            ->where('is_active', true)
-            ->with([
-                'media',
-                'children.media',
-            ])
-            ->firstOrFail();
-        return $category;
+        $slugs = explode('/', trim($path, '/'));
+        $category = null;
+        $parentId = null;
+        foreach ($slugs as $slug) {
+            $query = Category::where('slug', $slug)
+                ->where('is_active', true);
+            $query = $parentId === null
+                ? $query->whereNull('parent_id')
+                : $query->where('parent_id', $parentId);
+            $category = $query->firstOrFail();
+            $parentId = $category->id;
+        }
+        return $category->load(['media', 'children.media']);
     }
-
     public function getCategoryProducts(Category $category): LengthAwarePaginator
     {
         return Item::query()

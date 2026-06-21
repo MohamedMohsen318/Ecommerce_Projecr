@@ -15,36 +15,24 @@ class CartService
     public function getCart(): Cart
     {
         if (Auth::check()) {
-            return Auth::user()->getOrCreateCart();
-        }
-
+            return Auth::user()->getOrCreateCart();}
         $sessionId = Session::getId();
-
         return Cart::firstOrCreate(
-            [
-                'session_id' => $sessionId,
-                'user_id'    => null,
-                'status'     => CartStatus::ACTIVE,
-            ],
-            [
-                'session_id' => $sessionId,
-                'status'     => CartStatus::ACTIVE,
-            ]
+            ['session_id' => $sessionId, 'user_id'=> null],
+            ['status' => CartStatus::ACTIVE]
         );
     }
-
     public function addItem(int $itemId, int $quantity = 1, array $options = []): CartItem
     {
         $cart = $this->getCart();
         $item = Item::findOrFail($itemId);
-
-        $existingItem = $cart->items()->where('item_id', $itemId)->first();
-
+        $existingItem = $cart->items()
+            ->where('item_id', $itemId)->first();
         if ($existingItem) {
             $existingItem->increment('quantity', $quantity);
             return $existingItem->fresh();
+            //increment -> X+Y
         }
-
         return $cart->items()->create([
             'item_id'  => $item->id,
             'quantity' => $quantity,
