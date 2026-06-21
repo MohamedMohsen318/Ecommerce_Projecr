@@ -15,10 +15,12 @@ class CartService
             ->when(!empty($filters['status']), function ($query) use ($filters) {
                 $query->where('status', $filters['status']);
             })
-            ->when(!empty($filters['search']), function ($query) use ($filters) {
+            ->when(!empty($filters['search']),
+                function ($query) use ($filters) {
                 $search = $filters['search'];
 
-                $query->whereHas('user', function ($userQuery) use ($search) {
+                $query->whereHas('user',
+                    function ($userQuery) use ($search) {
                     $userQuery->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%");
                 });

@@ -41,22 +41,17 @@ class CartService
         ]);
     }
 
-    public function updateItem(int $cartItemId, int $quantity): ?CartItem
-    {
+    public function updateItem(int $cartItemId, int $quantity): ?CartItem{
         $item = $this->getCart()->items()->findOrFail($cartItemId);
-
         if ($quantity <= 0) {
             $item->delete();
             return null;
         }
-
         $item->update([
             'quantity' => $quantity,
         ]);
-
         return $item->fresh();
     }
-
     public function removeItem(int $cartItemId): bool
     {
         return (bool) $this->getCart()
@@ -107,22 +102,32 @@ class CartService
         $userCart = Auth::user()->getOrCreateCart();
 
         DB::transaction(function () use ($guestCart, $userCart) {
+            $existingItems = $userCart->items()
+                ->get()
+                ->keyBy('item_id');
+
+            $newItems = [];
             foreach ($guestCart->items as $guestItem) {
-                $existingItem = $userCart->items()
-                    ->where('item_id', $guestItem->item_id)
-                    ->first();
+                $existingItem = $existingItems->get($guestItem->item_id);
 
                 if ($existingItem) {
                     $existingItem->increment('quantity', $guestItem->quantity);
                     continue;
                 }
 
-                $userCart->items()->create([
-                    'item_id'  => $guestItem->item_id,
-                    'quantity' => $guestItem->quantity,
-                    'price'    => $guestItem->price,
-                    'options'  => $guestItem->options,
-                ]);
+                $newItems[] = [
+                    'cart_id'    => $userCart->id,
+                    'item_id'    => $guestItem->item_id,
+                    'quantity'   => $guestItem->quantity,
+                    'price'      => $guestItem->price,
+                    'options'    => $guestItem->options,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            if (!empty($newItems)) {
+                $userCart->items()->insert($newItems);
             }
 
             $guestCart->items()->delete();
