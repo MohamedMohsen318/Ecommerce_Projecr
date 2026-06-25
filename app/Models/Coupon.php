@@ -14,6 +14,7 @@ class Coupon extends Model
     use CouponRelations;
     use HasCoupons;
 
+
     protected $fillable = [
         'code',
         'type',

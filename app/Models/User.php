@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasCartTrait;
 use App\Models\Traits\HasCoupons;
+use App\Models\Relations\CouponRelations;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +14,14 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, HasCartTrait, HasCoupons, Notifiable;
+    use HasFactory,
+        HasRoles,
+        Notifiable,
+        HasCartTrait,
+        HasCoupons,
+        CouponRelations;
+
+    protected string $guard_name = 'web';
 
     protected $fillable = [
         'name',
@@ -22,8 +30,6 @@ class User extends Authenticatable
         'phone',
         'address',
     ];
-
-    protected string $guard_name = 'web';
 
     protected $hidden = [
         'password',
@@ -34,7 +40,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 }

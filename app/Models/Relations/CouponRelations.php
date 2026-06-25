@@ -2,6 +2,7 @@
 
 namespace App\Models\Relations;
 
+use App\Models\Coupon;
 use App\Models\CouponUsage;
 use App\Models\Order;
 use App\Models\User;
@@ -25,5 +26,17 @@ trait CouponRelations
         return $this->belongsToMany(User::class, 'coupon_usages')
             ->withPivot('discount_amount', 'order_id')
             ->withTimestamps();
+    }
+
+    public function coupons(): BelongsToMany
+    {
+        return $this->belongsToMany(Coupon::class, 'coupon_usages')
+            ->withPivot('discount_amount', 'order_id')
+            ->withTimestamps();
+    }
+
+    public function couponUsages(): HasMany
+    {
+        return $this->hasMany(CouponUsage::class);
     }
 }
