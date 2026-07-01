@@ -44,6 +44,23 @@
                     <input type="number" name="min_order_amount" value="{{ old('min_order_amount', $discount->min_order_amount) }}" step="0.01" min="0">
                 </label>
 
+                <label class="checkbox">
+                    <input type="checkbox" name="is_condition" value="1" id="is_condition" @checked(old('is_condition', $discount->is_condition)) onchange="toggleConditionFields()">
+                    Has Condition
+                </label>
+
+                <div class="grid" id="condition-fields">
+                    <label class="field">
+                        <span>Minimum Condition Value</span>
+                        <input type="number" name="min_condition_value" value="{{ old('min_condition_value', $discount->min_condition_value) }}" step="0.01" min="0">
+                    </label>
+
+                    <label class="field">
+                        <span>Maximum Condition Value</span>
+                        <input type="number" name="max_condition_value" value="{{ old('max_condition_value', $discount->max_condition_value) }}" step="0.01" min="0">
+                    </label>
+                </div>
+
                 <div class="grid">
                     <label class="field">
                         <span>Start Date</span>
@@ -89,6 +106,21 @@
             maxField.style.display = type === 'percentage' ? 'grid' : 'none';
         }
 
+        function toggleConditionFields() {
+            const checkbox = document.getElementById('is_condition');
+            const fields = document.getElementById('condition-fields');
+            const minInput = document.querySelector('[name="min_condition_value"]');
+            const maxInput = document.querySelector('[name="max_condition_value"]');
+
+            fields.style.display = checkbox.checked ? 'grid' : 'none';
+
+            if (!checkbox.checked) {
+                minInput.value = '';
+                maxInput.value = '';
+            }
+        }
+
         toggleDiscountFields();
+        toggleConditionFields();
     </script>
 @endsection

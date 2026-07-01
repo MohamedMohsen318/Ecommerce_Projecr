@@ -76,6 +76,41 @@
                            class="w-full border rounded-lg px-3 py-2">
                 </div>
 
+                {{-- Conditional Usage --}}
+                <div class="mb-4 flex items-center gap-2">
+                    <input type="checkbox" name="is_condition" value="1" id="is_condition"
+                           {{ old('is_condition') ? 'checked' : '' }}
+                           class="w-4 h-4"
+                           onchange="toggleConditionFields()">
+                    <label for="is_condition" class="text-sm font-medium">Has Condition</label>
+                </div>
+
+                <div id="condition-fields" class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Minimum Condition Value *</label>
+                        <input type="number" name="min_condition_value"
+                               value="{{ old('min_condition_value') }}"
+                               step="0.01" min="0"
+                               class="w-full border rounded-lg px-3 py-2 @error('min_condition_value') border-red-500 @enderror">
+                        @error('min_condition_value')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            Maximum Condition Value
+                            <span class="text-gray-400 text-xs">(Optional)</span>
+                        </label>
+                        <input type="number" name="max_condition_value"
+                               value="{{ old('max_condition_value') }}"
+                               step="0.01" min="0"
+                               class="w-full border rounded-lg px-3 py-2 @error('max_condition_value') border-red-500 @enderror">
+                        @error('max_condition_value')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
                 {{-- Dates --}}
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
@@ -149,8 +184,22 @@
                     maxField.style.display = 'none';
                 }
             }
+            function toggleConditionFields() {
+                const checkbox = document.getElementById('is_condition');
+                const fields = document.getElementById('condition-fields');
+                const minInput = document.querySelector('[name="min_condition_value"]');
+                const maxInput = document.querySelector('[name="max_condition_value"]');
+
+                fields.style.display = checkbox.checked ? 'grid' : 'none';
+
+                if (!checkbox.checked) {
+                    minInput.value = '';
+                    maxInput.value = '';
+                }
+            }
             // Run on page load
             toggleDiscountFields();
+            toggleConditionFields();
         </script>
     @endpush
 @endsection

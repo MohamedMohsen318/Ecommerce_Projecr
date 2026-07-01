@@ -15,7 +15,10 @@ return new class extends Migration
             $table->decimal('value', 8, 2);
             $table->decimal('min_order_amount', 8, 2)->default(0);
             $table->decimal('max_discount_amount', 8, 2)->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_condition')->default(false);
+            $table->decimal('min_condition_value', 8, 2)->nullable();
+            $table->decimal('max_condition_value', 8, 2)->nullable();
+            $table->enum('status', ['active', 'scheduled', 'cancelled',])->default('active');
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->unsignedInteger('max_uses')->nullable();

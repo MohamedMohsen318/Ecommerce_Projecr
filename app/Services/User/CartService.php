@@ -3,9 +3,11 @@
 namespace App\Services\User;
 
 use App\Enums\CartStatus;
+use App\Exceptions\DiscountException;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Item;
+use App\Services\DiscountService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -72,10 +74,30 @@ class CartService
 
     public function applyDiscount(string $code): array
     {
-        return [
-            'success' => false,
-            'message' => 'Invalid discount code',
-        ];
+        $cart = $this->getCart()->load('items');
+
+        try {
+            $result = app(DiscountService::class)->validate(
+                $code,
+                $cart->subtotal,
+                Auth::user()
+            );
+
+            $cart->update([
+                'discount_code' => $result['discount']->code,
+                'discount_amount' => $result['discount_amount'],
+            ]);
+
+            return [
+                'success' => true,
+                'message' => $result['message'],
+            ];
+        } catch (DiscountException $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ];
+        }
     }
 
     public function removeDiscount(): bool

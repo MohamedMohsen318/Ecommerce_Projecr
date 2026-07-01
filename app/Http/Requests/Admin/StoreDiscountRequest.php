@@ -61,6 +61,24 @@ class StoreDiscountRequest extends FormRequest
                 'min:0',
             ],
 
+            'is_condition' => [
+                'boolean',
+            ],
+
+            'min_condition_value' => [
+                Rule::requiredIf($this->boolean('is_condition')),
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
+
+            'max_condition_value' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                'gte:min_condition_value',
+            ],
+
             'is_active' => [
                 'boolean',
             ],
@@ -101,17 +119,24 @@ class StoreDiscountRequest extends FormRequest
             'value.required' => 'Discount value is required.',
             'expires_at.after' => 'The expiration date must be after the start date.',
             'max_discount_amount.required' => 'Maximum discount amount is required for percentage discounts.',
+            'min_condition_value.required' => 'Minimum condition value is required when conditions are enabled.',
+            'max_condition_value.gte' => 'Maximum condition value must be greater than or equal to the minimum condition value.',
         ];
     }
 
     protected function prepareForValidation(): void
     {
+        $hasCondition = $this->boolean('is_condition');
+
         $this->merge([
             'code' => $this->code
                 ? strtoupper(trim($this->code))
                 : null,
 
             'is_active' => $this->boolean('is_active'),
+            'is_condition' => $hasCondition,
+            'min_condition_value' => $hasCondition ? $this->min_condition_value : null,
+            'max_condition_value' => $hasCondition ? $this->max_condition_value : null,
         ]);
     }
 }
