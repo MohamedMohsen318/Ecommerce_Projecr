@@ -40,7 +40,6 @@ class DiscountService
             ]);
         });
     }
-
     public function getStats(Discount $discount): array
     {
         return [
@@ -54,7 +53,6 @@ class DiscountService
                 : max(0, $discount->max_uses - $discount->used_count),
         ];
     }
-    //private helpers
     private function findValidDiscount(string $code): Discount
     {
         $discount = Discount::query()
@@ -93,38 +91,28 @@ class DiscountService
             );
         }
     }
-    private function assertPerUserUsageLimit(
-        Discount $discount,
-        ?User $user
-    ): void {
+    private function assertPerUserUsageLimit(Discount $discount, ?User $user): void {
         if (! $user) {
-            return;
-        }
-
+            return;}
         if ($user->hasReachedDiscountLimit($discount)) {
             throw new DiscountException(
                 'You have reached the usage limit for this discount.'
             );
         }
     }
-    private function assertConditionRange(Discount $discount, float $orderAmount): void
-    {
+    private function assertConditionRange(Discount $discount, float $orderAmount): void{
         if (! $discount->is_condition) {
-            return;
-        }
-
+            return;}
         $minimum = (float) $discount->min_condition_value;
         $maximum = $discount->max_condition_value !== null
             ? (float) $discount->max_condition_value
             : null;
-
         if ($orderAmount < $minimum) {
             throw new DiscountException(sprintf(
                 'This discount requires an order amount of at least %s.',
                 $this->formatAmount($minimum)
             ));
         }
-
         if ($maximum !== null && $orderAmount > $maximum) {
             throw new DiscountException(sprintf(
                 'This discount can only be used for orders up to %s.',
@@ -132,21 +120,16 @@ class DiscountService
             ));
         }
     }
-    private function formatAmount(float $amount): string
-    {
+    private function formatAmount(float $amount): string{
         return number_format($amount, 2) . ' ' . self::CURRENCY;
     }
-    public function validate(string $code, float $orderAmount, ?User $user): array
-{
+    public function validate(string $code, float $orderAmount, ?User $user): array{
     $discount = $this->findValidDiscount($code);
-
     $this->assertMinOrderAmount($discount, $orderAmount);
     $this->assertConditionRange($discount, $orderAmount);
     $this->assertGlobalUsageLimit($discount);
     $this->assertPerUserUsageLimit($discount, $user);
-
     $discountAmount = $discount->calculateDiscount($orderAmount);
-
     return [
         'discount' => $discount,
         'discount_amount' => $discountAmount,
