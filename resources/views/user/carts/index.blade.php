@@ -121,31 +121,31 @@
 
                     <h2 style="margin:0; font-size:20px">Order Summary</h2>
 
-                    {{-- Coupon --}}
-                    <form method="POST" action="{{ route('cart.coupon.apply') }}">
+                    {{-- Discount --}}
+                    <form method="POST" action="{{ route('cart.discount.apply') }}">
                         @csrf
 
                         <label style="display:grid; gap:6px; font-weight:700; font-size:14px">
-                            Coupon Code
+                            Discount Code
 
                             <div style="display:flex; gap:8px">
                                 <input type="text"
                                        name="code"
-                                       placeholder="Enter coupon"
-                                       value="{{ $cart->coupon_code ?? '' }}">
+                                       placeholder="Enter discount"
+                                       value="{{ $cart->discount_code ?? '' }}">
 
                                 <button class="button">Apply</button>
                             </div>
                         </label>
                     </form>
 
-                    @if($cart->coupon_code)
-                        <form method="POST" action="{{ route('cart.coupon.remove') }}">
+                    @if($cart->discount_code)
+                        <form method="POST" action="{{ route('cart.discount.remove') }}">
                             @csrf
                             @method('DELETE')
 
                             <div style="display:flex; gap:8px; align-items:center">
-                                <span class="pill">{{ $cart->coupon_code }}</span>
+                                <span class="pill">{{ $cart->discount_code }}</span>
 
                                 <button class="button danger">
                                     Remove

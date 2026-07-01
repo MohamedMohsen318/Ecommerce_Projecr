@@ -70,15 +70,15 @@ class CartService
         return true;
     }
 
-    public function applyCoupon(string $code): array
+    public function applyDiscount(string $code): array
     {
         return [
             'success' => false,
-            'message' => 'Invalid coupon code',
+            'message' => 'Invalid discount code',
         ];
     }
 
-    public function removeCoupon(): bool
+    public function removeDiscount(): bool
     {
         return $this->getCart()->clearDiscount();
     }

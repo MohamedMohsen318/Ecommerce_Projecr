@@ -15,7 +15,7 @@ class Cart extends Model
     protected $fillable = [
         'user_id',
         'session_id',
-        'coupon_code',
+        'discount_code',
         'discount_amount',
         'status',
         'expires_at',
@@ -59,7 +59,7 @@ class Cart extends Model
     public function clearDiscount(): bool
     {
         return $this->update([
-            'coupon_code' => null,
+            'discount_code' => null,
             'discount_amount' => 0,
         ]);
     }

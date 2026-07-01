@@ -485,6 +485,7 @@
             <a href="{{ route('admins.dashboard') }}">{{ $label('Dashboard', 'لوحة التحكم') }}</a>
             <a href="{{ route('admins.items.index') }}">{{ $label('Manage Products', 'إدارة المنتجات') }}</a>
             <a href="{{ route('admins.categories.index') }}">{{ $label('Manage Categories', 'إدارة الأقسام') }}</a>
+            <a href="{{ route('admins.discounts.index') }}">{{ $label('Discounts', 'الخصومات') }}</a>
             <a href="{{ route('admins.orders.index') }}">{{ $label('Orders', 'الطلبات') }}</a>
 
             @if (auth(\App\Enums\AuthGuard::Admins->value)->user()?->hasRole(\App\Enums\AdminRole::SuperAdmin->value))

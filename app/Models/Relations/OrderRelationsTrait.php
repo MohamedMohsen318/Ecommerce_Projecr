@@ -2,7 +2,7 @@
 
 namespace App\Models\Relations;
 
-use App\Models\Coupon;
+use App\Models\Discount;
 use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,8 +20,8 @@ trait OrderRelationsTrait
         return $this->belongsTo(User::class);
     }
 
-    public function coupon(): BelongsTo
+    public function discount(): BelongsTo
     {
-        return $this->belongsTo(Coupon::class);
+        return $this->belongsTo(Discount::class);
     }
 }

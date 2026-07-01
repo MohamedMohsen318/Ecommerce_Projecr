@@ -14,7 +14,7 @@ class Order extends Model
         'user_id',
         'status',
         'total_price',
-        'coupon_id',
+        'discount_id',
         'discount_amount',
         'final_total',
     ];

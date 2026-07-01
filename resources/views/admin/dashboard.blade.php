@@ -22,6 +22,8 @@
             <div class="actions">
                 <a class="button secondary" href="{{ route('admins.categories.index') }}">Categories</a>
                 <a class="button" href="{{ route('admins.items.index') }}">Products</a>
+                <a class="button secondary" href="{{ route('admins.discounts.index') }}">Discounts</a>
+                <a class="button" href="{{ route('admins.discounts.create') }}">Add Discount</a>
                 <a class="button secondary" href="{{ route('admins.orders.index') }}">Orders</a>
                 @if (auth(\App\Enums\AuthGuard::Admins->value)->user()?->hasRole(\App\Enums\AdminRole::SuperAdmin->value))
                     <a class="button" href="{{ route('admins.admins.create') }}">Add Admin</a>

@@ -83,7 +83,7 @@
 
                     @if($cart->discount_amount > 0)
                         <div class="flex-between" style="color:#047857">
-                            <span>Discount ({{ $cart->coupon_code }})</span>
+                            <span>Discount ({{ $cart->discount_code }})</span>
                             <span>-{{ number_format($cart->discount_amount, 2) }} EGP</span>
                         </div>
                     @endif

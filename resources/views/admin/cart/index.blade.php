@@ -73,7 +73,7 @@
                     <th>User</th>
                     <th>Items</th>
                     <th>Total</th>
-                    <th>Coupon</th>
+                    <th>Discount</th>
                     <th>Status</th>
                     <th>Date</th>
                     <th>Actions</th>
@@ -105,8 +105,8 @@
                         </td>
 
                         <td>
-                            @if($cart->coupon_code)
-                                <span class="pill">{{ $cart->coupon_code }}</span>
+                            @if($cart->discount_code)
+                                <span class="pill">{{ $cart->discount_code }}</span>
                             @else
                                 <span class="muted">—</span>
                             @endif

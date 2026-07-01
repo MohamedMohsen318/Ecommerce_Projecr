@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('session_id')->nullable()->index();
-            $table->string('coupon_code')->nullable();
+            $table->string('discount_code')->nullable();
             $table->decimal('discount_amount', 10, 2)->default(0);
             $table->string('status')->default(CartStatus::ACTIVE->value);
             $table->timestamp('expires_at')->nullable();
