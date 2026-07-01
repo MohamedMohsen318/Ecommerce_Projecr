@@ -13,27 +13,6 @@ class DiscountService
 {
     private const CURRENCY = 'EGP';
 
-    public function validate(string $code, float $orderAmount, User $user): array
-    {
-        $discount = $this->findValidDiscount($code);
-
-        $this->assertMinOrderAmount($discount, $orderAmount);
-        $this->assertGlobalUsageLimit($discount);
-        $this->assertPerUserUsageLimit($discount, $user);
-
-        $discountAmount = $discount->calculateDiscount($orderAmount);
-
-        return [
-            'discount' => $discount,
-            'discount_amount' => $discountAmount,
-            'final_amount' => max(0, $orderAmount - $discountAmount),
-            'message' => sprintf(
-                'Discount applied successfully. You saved %s.',
-                $this->formatAmount($discountAmount)
-            ),
-        ];
-    }
-
     public function apply(Discount $discount,Order $order,User $user,float $discountAmount): void {
         DB::transaction(function (
         ) use ($discount, $order, $user, $discountAmount): void {
@@ -128,4 +107,24 @@ class DiscountService
     {
         return number_format($amount, 2) . ' ' . self::CURRENCY;
     }
+    public function validate(string $code, float $orderAmount, User $user): array
+{
+    $discount = $this->findValidDiscount($code);
+
+    $this->assertMinOrderAmount($discount, $orderAmount);
+    $this->assertGlobalUsageLimit($discount);
+    $this->assertPerUserUsageLimit($discount, $user);
+
+    $discountAmount = $discount->calculateDiscount($orderAmount);
+
+    return [
+        'discount' => $discount,
+        'discount_amount' => $discountAmount,
+        'final_amount' => max(0, $orderAmount - $discountAmount),
+        'message' => sprintf(
+            'Discount applied successfully. You saved %s.',
+            $this->formatAmount($discountAmount)
+        ),
+    ];
+}
 }
