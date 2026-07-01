@@ -88,10 +88,8 @@ class DiscountService
                 'Invalid or expired discount code.'
             );
         }
-
         return $discount;
     }
-
     private function assertMinOrderAmount(
         Discount $discount,
         float $orderAmount
@@ -105,7 +103,6 @@ class DiscountService
             ));
         }
     }
-
     private function assertGlobalUsageLimit(Discount $discount): void
     {
         if (
@@ -117,7 +114,6 @@ class DiscountService
             );
         }
     }
-
     private function assertPerUserUsageLimit(
         Discount $discount,
         User $user
@@ -128,7 +124,6 @@ class DiscountService
             );
         }
     }
-
     private function formatAmount(float $amount): string
     {
         return number_format($amount, 2) . ' ' . self::CURRENCY;

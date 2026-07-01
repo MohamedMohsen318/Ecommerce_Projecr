@@ -46,7 +46,6 @@ trait HasDiscounts
     {
         return $this->type === DiscountType::Percentage;
     }
-
     public function getIsFixedAttribute(): bool
     {
         return $this->type === DiscountType::Fixed;
@@ -66,7 +65,6 @@ trait HasDiscounts
             ->whereRaw('(starts_at IS NULL OR starts_at <= ?)', [$now])
             ->whereRaw('(expires_at IS NULL OR expires_at > ?)', [$now]);
     }
-
     // Discount Business Logic
     public function calculateDiscount(float $amount): float
     {

@@ -149,7 +149,6 @@
                     maxField.style.display = 'none';
                 }
             }
-
             // Run on page load
             toggleDiscountFields();
         </script>
